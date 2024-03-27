@@ -142,15 +142,15 @@ void set_gpio(int slavesel_b, int creset_b)
 
 void flash_read_id()
 {
-	// fprintf(stderr, "read flash ID..\n");
+	fprintf(stderr, "read flash ID..\n");
 
 	uint8_t data[21] = { 0x9F };
 	set_gpio(0, 0);
-	xfer_spi(data, 21);
+	xfer_spi(data, 1);
 	set_gpio(1, 0);
 
 	fprintf(stderr, "flash ID:");
-	for (int i = 1; i < 21; i++)
+	for (int i = 1; i < 4; i++)
 		fprintf(stderr, " 0x%02X", data[i]);
 	fprintf(stderr, "\n");
 }
