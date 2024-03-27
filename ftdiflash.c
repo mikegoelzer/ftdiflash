@@ -146,7 +146,7 @@ void flash_read_id()
 
 	uint8_t data[21] = { 0x9F };
 	set_gpio(0, 0);
-	xfer_spi(data, 1);
+	xfer_spi(data, 4);
 	set_gpio(1, 0);
 
 	fprintf(stderr, "flash ID:");

@@ -16,6 +16,8 @@ LDLIBS += $(shell for pkg in libftdi1 libftdi; do $(PKG_CONFIG) --silence-errors
 CFLAGS += $(shell for pkg in libftdi1 libftdi; do $(PKG_CONFIG) --silence-errors --cflags $$pkg && exit; done; )
 endif
 
+TEMP_BIN=tmp.bin
+
 all: ftdiflash$(EXE)
 
 ftdiflash$(EXE): ftdiflash.o
@@ -28,10 +30,17 @@ install: all
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/ftdiflash
 
+test: ftdiflash$(EXE)
+	sudo ./ftdiflash -d i:0x0403:0x6014 -v -t
+
+dump: ftdiflash$(EXE)
+	sudo ./ftdiflash -d i:0x0403:0x6014 -v -R 1k $(TEMP_BIN)
+
 clean:
 	rm -f ftdiflash
 	rm -f ftdiflash.exe
 	rm -f *.o *.d
+	rm -rf $(TEMP_BIN)
 
 -include *.d
 
