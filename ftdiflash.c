@@ -37,6 +37,7 @@ bool ftdic_open = false;
 bool verbose = false;
 bool ftdic_latency_set = false;
 unsigned char ftdi_latency;
+void flash_power_up();
 
 void check_rx()
 {
