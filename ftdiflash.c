@@ -52,6 +52,7 @@ void error()
 {
 	check_rx();
 	fprintf(stderr, "ABORT.\n");
+	flash_power_up(); // allow spi flash chip to come out of EBh mode lockup
 	if (ftdic_open) {
 		if (ftdic_latency_set)
 			ftdi_set_latency_timer(&ftdic, ftdi_latency);
