@@ -609,6 +609,8 @@ int main(int argc, char **argv)
 
 		set_gpio(1, 1);
 		usleep(250000);
+
+		flash_power_up(); // bring spi flash out of EBh mode
 	}
 
 
