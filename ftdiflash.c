@@ -473,6 +473,8 @@ int main(int argc, char **argv)
 
 		set_gpio(1, 1);
 		usleep(250000);
+
+		flash_power_up(); // allow spi flash chip to come out of EBh mode lockup
 	}
 	else
 	{
@@ -610,7 +612,7 @@ int main(int argc, char **argv)
 		set_gpio(1, 1);
 		usleep(250000);
 
-		flash_power_up(); // bring spi flash out of EBh mode
+		flash_power_up(); // bring spi flash out of EBh mode lockup
 	}
 
 
