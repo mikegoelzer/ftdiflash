@@ -128,8 +128,18 @@ void set_gpio(int slavesel_b, int creset_b)
 	uint8_t gpio = 1;
 
 	if (slavesel_b) {
+		// MODIFICATION: 
+		//   - don't use non-standard ADBUS4 as CS as iceprog does
+		//   - instead use normal CS on ADBUS3 below
+		//   - see FTDI AN_135 FTDI MPSSE Basics Version 1.1 (p. 19) for
+		//     example (https://www.ftdichip.com/Support/Documents/AppNotes/AN_135_MPSSE_Basics.pdf)
+
+		// ADBUS3 (normal CS)
+		gpio |= 0x08;
+
+		// uncomment to revert to ADBUS4 as CS (as iceprog does)
 		// ADBUS4 (GPIOL0)
-		gpio |= 0x10;
+		// gpio |= 0x10;
 	}
 
 	if (creset_b) {
@@ -137,9 +147,10 @@ void set_gpio(int slavesel_b, int creset_b)
 		gpio |= 0x80;
 	}
 
-	send_byte(0x80);
-	send_byte(gpio);
-	send_byte(0x93);
+	send_byte(0x80); // set low byte
+	send_byte(gpio); // gpio pin state of low byte
+	//send_byte(0x93); // direction of low byte pins
+	send_byte(0x9B); // 93->9B: also set ADBUS3 dir bit to output as well
 }
 
 void flash_read_id()
