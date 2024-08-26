@@ -419,13 +419,13 @@ int main(int argc, char **argv)
 
 	if (devstr != NULL) {
 		if (ftdi_usb_open_string(&ftdic, devstr)) {
-			fprintf(stderr, "Can't find FTDI USB device (device string %s).\n", devstr);
-			error();
+			fprintf(stderr, "FATAL: can't find FTDI USB device (device string %s, ifnum %d).\n", devstr, ifnum);
+			exit(1);
 		}
 	} else {
 		if (ftdi_usb_open(&ftdic, 0x0403, 0x6014)) {
-			fprintf(stderr, "Can't find FTDI FT232H USB device (vedor_id 0x0403, device_id 0x6014).\n");
-			error();
+			fprintf(stderr, "FATAL: can't find FTDI FT232H USB device (vedor_id 0x0403, device_id 0x6014, ifnum %d).\n", ifnum);
+			exit(1);
 		}
 	}
 
@@ -433,7 +433,7 @@ int main(int argc, char **argv)
 
 	if (ftdi_usb_reset(&ftdic)) {
 		fprintf(stderr, "Failed to reset FTDI USB device.\n");
-		error();
+		exit(1);
 	}
 
 	if (ftdi_usb_purge_buffers(&ftdic)) {
