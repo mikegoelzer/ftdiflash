@@ -14,8 +14,8 @@ sudo make install    # writes ftdiflash to /usr/local/bin
 # Usage
 
 ```
-# Read first 512 bytes of flash to null.bin
-sudo ftdiflash -d i:0x0403:0x6014 -v -R 512 -o 0 null.bin
+# Read first 512 bytes of flash to null.bin (from first interface 'A' on FTDI chip)
+sudo ftdiflash -I A -d i:0x0403:0x6014 -v -R 512 -o 0 null.bin
 ```
 
 # Wiring
