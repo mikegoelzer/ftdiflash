@@ -38,9 +38,12 @@ sudo ftdiflash -I B -d i:0x0403:0x6011 -v -R 512 -o 0 null.bin
 
 ### Writing
 
-Write the file `write.bin` to the second interface (`B`) of an **FT4232H** starting at the 0th byte:
+Generate and the file `write.bin` (from `write.txt` ASCII source) to the second interface (`B`) of an **FT4232H** starting at the 0th byte:
 
 ```
+# generate: write.txt -> write.bin (256 bytes)
+xxd -r -p write.txt > write.bin
+
 # note: automatically first erases the 64k sector starting at 0th byte
 sudo ftdiflash -I B -d i:0x0403:0x6011 -v -o 0 write.bin
 
