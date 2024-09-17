@@ -11,6 +11,8 @@ make
 sudo make install    # writes ftdiflash to /usr/local/bin
 ```
 
+**Pro-tip**: don't install `libftdi1-dev` and if you have already, do `sudo apt remove libftdi1-dev`
+
 # Usage
 
 ### List FTDI Devices
