@@ -339,6 +339,22 @@ void list_devices() {
     int i = 0;
     int vid = 0x0403;
     int pids[] = {0x6001, 0x6010, 0x6011, 0x6014, 0x6015};
+    /*
+     * PID 6001 for FT232B/R and FT245B/R
+     * PID 6010 for FT2232D/H
+     * PID 6011 for FT4232H
+     * PID 6014 for FT232H
+     * PID 6015 for all FT-X series
+     * PID 601B/601C for FT4222H
+     * PID 6040 for FT2233HP
+     * PID 6041 for FT4233HP
+     * PID 6042 for FT2232HP
+     * PID 6043 for FT4232HP
+     * PID 6044 for FT233HP
+     * PID 6045 for FT232HP
+     * PID 6048 for FT4232HA
+     * PID 6049 for FT232RN
+     */
     int num_pids = sizeof(pids) / sizeof(pids[0]);
 
     ftdi_init(&ftdic);
