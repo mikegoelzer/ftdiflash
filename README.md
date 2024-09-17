@@ -13,9 +13,37 @@ sudo make install    # writes ftdiflash to /usr/local/bin
 
 # Usage
 
+### List FTDI Devices
+
 ```
-# Read first 512 bytes of flash to null.bin (from first interface 'A' on FTDI chip)
-sudo ftdiflash -I A -d i:0x0403:0x6014 -v -R 512 -o 0 null.bin
+sudo ftdiflash -l
+```
+
+### Reading
+
+Read first 512 bytes from an **FT232H** (which has only one interface) and write them to `out.bin`:
+```
+sudo ftdiflash -I A -d i:0x0403:0x6014 -v -R 512 -o 0 out.bin
+```
+
+(replace with `/dev/null` if you don't want to save the output)
+
+# Read first 512 bytes of from second interface (`B`) from an **FT4232H**:
+
+```
+sudo ftdiflash -I B -d i:0x0403:0x6011 -v -R 512 -o 0 null.bin
+```
+
+### Writing
+
+Write the file `write.bin` to the second interface (`B`) of an **FT4232H** starting at the 0th byte:
+
+```
+# note: automatically first erases the 64k sector starting at 0th byte
+sudo ftdiflash -I B -d i:0x0403:0x6011 -v -o 0 write.bin
+
+# print the just written bytes back to the terminal
+sudo ftdiflash -I B -d i:0x0403:0x6011 -v -R 256 -o 0 /dev/null
 ```
 
 # Wiring

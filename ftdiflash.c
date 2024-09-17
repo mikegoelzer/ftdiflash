@@ -322,11 +322,60 @@ void help(const char *progname)
 	fprintf(stderr, "    -v\n");
 	fprintf(stderr, "        verbose output\n");
 	fprintf(stderr, "\n");
+	fprintf(stderr, "    -l\n");
+	fprintf(stderr, "        list available FTDI devices\n");
+	fprintf(stderr, "\n");
 	fprintf(stderr, "Without -b or -n, ftdiflash will erase aligned chunks of 64kB in write mode.\n");
 	fprintf(stderr, "This means that some data after the written data (or even before when -o is\n");
 	fprintf(stderr, "used) may be erased as well.\n");
 	fprintf(stderr, "\n");
 	exit(1);
+}
+
+void list_devices() {
+    struct ftdi_context ftdic;
+    struct ftdi_device_list *devlist, *curdev;
+    char manufacturer[128], description[128], serial[128];
+    int i = 0;
+    int vid = 0x0403;
+    int pids[] = {0x6001, 0x6010, 0x6011, 0x6014, 0x6015};
+    int num_pids = sizeof(pids) / sizeof(pids[0]);
+
+    ftdi_init(&ftdic);
+    
+    printf("Available FTDI devices:\n");
+
+    int devices_found = 0;
+    for (int j = 0; j < num_pids; j++) {
+        int ret = ftdi_usb_find_all(&ftdic, &devlist, vid, pids[j]);
+        if (ret < 0) {
+            fprintf(stderr, "ftdi_usb_find_all failed for VID:PID 0x%04x:0x%04x: %d (%s)\n", 
+                    vid, pids[j], ret, ftdi_get_error_string(&ftdic));
+            continue;
+        }
+
+        for (curdev = devlist; curdev != NULL; i++) {
+            devices_found++;
+            printf("\nDev: %d (VID:PID 0x%04x:0x%04x)\n", i, vid, pids[j]);
+            if (ftdi_usb_get_strings(&ftdic, curdev->dev, manufacturer, 128, description, 128, serial, 128) < 0) {
+                fprintf(stderr, "ftdi_usb_get_strings failed: %d (%s)\n", ret, ftdi_get_error_string(&ftdic));
+                continue;
+            }
+            printf("  Manufacturer:  %s\n", manufacturer);
+            printf("  Description:   %s\n", description);
+            printf("  Serial:        %s\n", serial);
+            printf("  CLI hint:      -d i:0x%04x:0x%04x\n\n", vid, pids[j]);
+            curdev = curdev->next;
+        }
+
+        ftdi_list_free(&devlist);
+    }
+    
+    if (devices_found == 0) {
+        printf("None\n");
+    }
+
+    ftdi_deinit(&ftdic);
 }
 
 int main(int argc, char **argv)
@@ -346,7 +395,7 @@ int main(int argc, char **argv)
 
 	int opt;
 	char *endptr;
-	while ((opt = getopt(argc, argv, "d:I:rR:o:cbnStv")) != -1)
+	while ((opt = getopt(argc, argv, "d:I:rR:o:cbnStvl")) != -1)
 	{
 		switch (opt)
 		{
@@ -389,6 +438,9 @@ int main(int argc, char **argv)
 		case 'v':
 			verbose = true;
 			break;
+		case 'l':
+			list_devices();
+			return 0;
 		default:
 			help(argv[0]);
 		}
