@@ -7,7 +7,7 @@ PKG_CONFIG ?= pkg-config
 DESTDIR ?=
 PREFIX ?= /usr/local
 CHIPDB_SUBDIR ?= icebox
-STATIC = 1
+STATIC = 0
 
 ifeq ($(MXE),1)
 EXE = .exe
